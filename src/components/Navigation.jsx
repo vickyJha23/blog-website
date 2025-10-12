@@ -44,7 +44,7 @@ const Navigation = () => {
 
 
   return (
-    <nav className='w-full h-20 border-b-2 border-b-black flex justify-between items-center px-6 overflow-hidden'>
+    <nav className='w-full h-20 border-b-1 border-b-[#ccc] flex justify-between items-center px-6 overflow-hidden'>
          <div className='flex gap-2 items-center'>
               <button>
                    <Menu size={22} color='black' />
