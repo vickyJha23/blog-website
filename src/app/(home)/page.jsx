@@ -8,7 +8,7 @@ import Modal from '@/components/Modal'
 
 
 
-const page = () => {
+const HomePage = () => {
     const [isLoggedIn, setIsLoggedIn] = React.useState("");
 
     const handleIsLoggedIn = useCallback(() => {
@@ -36,7 +36,7 @@ const page = () => {
                  </button>
              </div>
              <div>
-                 <img src={store.heroImg} alt="" className='w-96' />
+                 <img src={store.heroImg} alt="" className='w-80' />
              </div>
               {
                  isLoggedIn && <Modal handleIsLoggedIn={handleIsLoggedIn}/>
@@ -45,4 +45,4 @@ const page = () => {
   )
 }
 
-export default page
+export default HomePage

@@ -1,12 +1,38 @@
 "use client"
-import React from 'react';
+import React, { act } from 'react';
 import { Menu, Home, User, BookText } from 'lucide-react';
 import Link from 'next/link';
 import { AnimatePresence, motion } from "framer-motion"
 
 
-const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
 
+const navItems = [
+  {
+    name: "Home",
+    href: "/dash",
+    icon: Home
+  },
+  {
+    name: "Profile",
+    href: "/dash/profiles",
+    icon: User
+  },
+  {
+    name: "Stories",
+    href: "/dash/stories",
+    icon: BookText
+  }
+];
+
+
+const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
+      const [activeIndex, setActiveIndex] = React.useState(0);
+
+
+      const activeIndexHandler = (index) => {
+            console.log("index", index);
+            setActiveIndex(index); 
+      }
 
     return (
         <>
@@ -14,7 +40,7 @@ const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
               width: 0,
               opacity:0
         }}   animate={{
-               width: isAnimate ? "100": "0",
+               width: isAnimate ? "100%": "0",
                opacity: isAnimate ? "1": "0",
         }} className="flex w-full bg-black/50 md:hidden right-0 md:bg-white md:w-[250px] fixed top-0 md:top-20 left-0 h-screen z-10 md:-z-10 border-r-1 border-r-[#ccc]">
             {/* Sidebar */}
@@ -24,7 +50,7 @@ const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
                     opacity: 0
 
                 }} animate={{
-                    x: isAnimate ? "100" : "0",
+                    x: isAnimate ? "0%" : "-100%",
                     opacity: isAnimate ? "1" : "0",
                     transition: {
                        duration: 2,
@@ -44,23 +70,15 @@ const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
                         </h2>
                     </div>
                     <ul className="flex-1 p-4 space-y-2">
-                        <li>
-                            <Link href="#" className="flex items-center p-2 rounded hover:bg-[#f1f1f1]">
-                                <Home className="w-5 h-5 mr-3" /> Home
-                            </Link>
-                        </li>
-                        <li>
-
-                            <Link href="#" className="flex items-center p-2 rounded hover:bg-[#f1f1f1]">
-                                <User className="w-5 h-5 mr-3" /> Profile
-                            </Link>
-                        </li>
-                        <li>
-
-                            <Link href="#" className="flex items-center p-2 rounded hover:bg-[#f1f1f1]">
-                                <BookText className="w-5 h-5 mr-3" /> Stories
-                            </Link>
-                        </li>
+                        {
+                             navItems.map(({name, href, icon: Icon}, index) => (<li key={name} onClick={(index) => {
+                                   activeIndexHandler(index);
+                             }}  className={`${activeIndex === index ? "bg-green-400": ""}`}>
+                                <Link href={href} className={`${activeIndex === index ? "bg-green-400": ""}flex items-center p-2 rounded hover:bg-[#f1f1f1]`}>
+                                    <Icon className='w-5 h-5 mr-3' /> {name}
+                                </Link>
+                             </li>))
+                        }
                     </ul>
                 </motion.div>
             </AnimatePresence>
@@ -72,7 +90,7 @@ const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
         }}   animate={{
                width: isAnimate ? "100": "0",
                opacity: isAnimate ? "1": "0",
-        }} className="hidden  md:flex md:bg-white !w-[250px] fixed top-20 left-0 h-screen bg-red-500 -z-10 border-r-1 border-r-[#ccc]">
+        }} className="hidden  md:flex md:bg-white !w-[250px] fixed top-20 left-0 h-screen bg-red-500 z-10 border-r-1 border-r-[#ccc]">
             {/* Sidebar */}
             <AnimatePresence>
                 <motion.div initial={{
@@ -80,7 +98,7 @@ const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
                     opacity: 0
 
                 }} animate={{
-                    x: isAnimate ? "100" : "0",
+                    x: isAnimate ? "0" : "-100%",
                     opacity: isAnimate ? "1" : "0",
                     transition: {
                        duration: 2,
@@ -97,23 +115,16 @@ const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
                         </h2>
                     </div>
                     <ul className="flex-1 p-4 space-y-2">
-                        <li>
-                            <Link href="#" className="flex items-center p-2 rounded hover:bg-[#f1f1f1]">
-                                <Home className="w-5 h-5 mr-3" /> Home
-                            </Link>
-                        </li>
-                        <li>
-
-                            <Link href="#" className="flex items-center p-2 rounded hover:bg-[#f1f1f1]">
-                                <User className="w-5 h-5 mr-3" /> Profile
-                            </Link>
-                        </li>
-                        <li>
-
-                            <Link href="#" className="flex items-center p-2 rounded hover:bg-[#f1f1f1]">
-                                <BookText className="w-5 h-5 mr-3" /> Stories
-                            </Link>
-                        </li>
+                             {
+                             navItems.map(({name, href, icon: Icon}, index) => (
+                             <li key={name}>
+                                <Link onClick={() => {
+                                  activeIndexHandler(index)
+                             }} key={name} className={`rounded hover:bg-[#f1f1f1] ${activeIndex === index ? "bg-green-500 text-white" : "text-black"} flex items-center p-2`} href={href}>
+                                    <Icon className='w-5 h-5 mr-3' /> {name}
+                                </Link>
+                             </li>))
+                        }
                     </ul>
                 </motion.div>
             </AnimatePresence>

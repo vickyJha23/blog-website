@@ -3,6 +3,9 @@ import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, Search,NotebookPen } from 'lucide-react';
+import Image from 'next/image';
+
+import avatar from "../../public/images/avatar.png"
 
 
 const Navigation = () => {
@@ -10,7 +13,7 @@ const Navigation = () => {
      console.log(pathName);
 
     if(pathName === "/") {
-         return (<nav className='w-full h-20 border-b-2 border-b-black flex justify-between items-center px-6 overflow-hidden'>
+         return (<nav className='fixed  top-0 left-0 z-20 w-full h-20 border-b-2 border-b-black flex justify-between items-center px-6 overflow-hidden'>
          <div className='flex items-center'>
              <h2 className='font-bold text-3xl text-black'>
                   Medium
@@ -44,7 +47,7 @@ const Navigation = () => {
 
 
   return (
-    <nav className='w-full h-20 border-b-1 border-b-[#ccc] flex justify-between items-center px-6 overflow-hidden'>
+    <nav className='fixed  top-0 left-0 bg-white z-50 w-full h-20 border-b-1 border-b-[#ccc] flex justify-between items-center px-6 overflow-hidden'>
          <div className='flex gap-2 items-center'>
               <button>
                    <Menu size={22} color='black' />
@@ -54,7 +57,7 @@ const Navigation = () => {
              </h2>
 
               <div className='hidden md:flex ml-5  items-center'>
-                 <input type="text" placeholder='Search' className='placeholder:text-black px-3 rounded-tl-[20px] rounded-bl-[20px] w-[200px] py-2 border-1' />
+                 <input type="text" placeholder='Search' className='text-black outline-none focus:outline-none placeholder:text-black px-3 rounded-tl-[20px] rounded-bl-[20px] w-[200px] py-2 border-1' />
                   <button className='bg-black border-1 border-black py-2 px-3 rounded-tr-[20px] rounded-br-[20px]' > 
                         <Search />
                   </button>
@@ -82,8 +85,9 @@ const Navigation = () => {
                 
                 
             </div> 
-            <div className='bg-black w-[40px] h-[40px] rounded-full'>
-                 <img src="" alt="" />
+            <div className='bg-black w-[40px] h-[40px] rounded-full overflow-hidden'>
+     
+                 <Image width={0} height={0} sizes='100vw' className='w-full h-full object-cover rounded-full' src={avatar} alt="" />
             </div>
         </div>
 
