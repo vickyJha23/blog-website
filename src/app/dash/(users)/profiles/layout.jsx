@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Provider, useSelector, useDispatch } from 'react-redux'
 import { store } from '@/store/store'
 import { ClipLoader } from 'react-spinners'
+import  { ToastContainer}   from "react-toastify"
 
 import { getUserProfileThunk } from '@/store/features/users/userThunk'
 import { toast } from 'react-toastify'
@@ -41,7 +42,6 @@ const ProfilesLayout = ({ children }) => {
         }
         const getProfile = async () => {
             try {
-              
                 const response = await dispatch(getUserProfileThunk(token)).unwrap();
                 toast.success(response.message);
             } catch (error) {
@@ -54,7 +54,8 @@ const ProfilesLayout = ({ children }) => {
 
     return (
         <Provider store={store}>
-            {!isLoading ? (<div className='h-screen overflow-hidden'>
+            <>
+               {!isLoading ? (<div className='h-screen overflow-hidden'>
                 <section className='h-full ml-62 mt-20'>
                     <div className='flex h-full'>
                         <div className='w-full h-full flex-1 p-8 pt-16 overflow-auto'>
@@ -97,6 +98,8 @@ const ProfilesLayout = ({ children }) => {
             </div>) : (<div className='ml-[256px] mt-20 h-[80vh] flex justify-center items-center'>
                 <ClipLoader color='red' size={100} />
             </div>)}
+             <ToastContainer />
+            </>
         </Provider>
     )
 }
