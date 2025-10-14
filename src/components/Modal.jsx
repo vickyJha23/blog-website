@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import SignInModal from "./SignInModal";
 import SignUpModal from "./SignUpModal";
 
-const Modal = ({ handleIsLoggedIn }) => {
+const Modal = () => {
     const [isSignIn, setIsSignIn] = React.useState(true);
  
     const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ const Modal = ({ handleIsLoggedIn }) => {
 
   return (
     <section className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      {isSignIn ? (<SignInModal handleIsLoggedIn={handleIsLoggedIn} handleSignInAndSignUp={handleSignInAndSignUp}  />) : (<SignUpModal handleIsLoggedIn={handleIsLoggedIn}  handleSignInAndSignUp={handleSignInAndSignUp}/>)}
+      {isSignIn ? (<SignInModal  handleSignInAndSignUp={handleSignInAndSignUp}  />) : (<SignUpModal handleSignInAndSignUp={handleSignInAndSignUp}/>)}
     </section>
   );
 };
