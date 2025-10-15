@@ -1,8 +1,7 @@
 "use client"
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllPostsThunk } from '@/store/features/posts/post.thunk';
-import Sidebar from '@/components/Sidebar'
 import CommentCard from '@/components/CommentCard';
 import { toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
@@ -11,26 +10,25 @@ import { ClipLoader } from 'react-spinners';
 
 
 const DashboardPage = () => {
-   const [isAnimate, setIsAnimate] = React.useState(false);
-   const {isLoading, error, posts} = useSelector((state) => state.posts);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [sort, setSort] = useState("asc");
+  const {isLoading, error, posts} = useSelector((state) => state.posts);
   
    const dispatch = useDispatch();
-    const handleIsAnimate = () => {
-          setIsAnimate((prev) => !prev);
-    }
 
-   useEffect(() => {
-        const fetchPosts = async ()=> {
+    const fetchPosts = async ()=> {
              try {
-                const page = 1;
-                const limit = 10;
-                const sort = "asc";
                 const token = localStorage.getItem("accessToken");
                 const response = await dispatch(getAllPostsThunk({page, limit, sort, token})).unwrap();
-             } catch (error) {
+                 toast.success(response.message);
+               } catch (error) {
                   toast.error(error.message);
-             }
+              }
         }
+
+
+   useEffect(() => {
         fetchPosts();
    }, []);
    console.log(posts);

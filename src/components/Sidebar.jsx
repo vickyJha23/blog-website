@@ -26,12 +26,14 @@ const navItems = [
 
 
 const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
-      const [activeIndex, setActiveIndex] = React.useState(0);
-
+      const [activeIndex, setActiveIndex] = React.useState(() => {
+             const savedIndex = localStorage.getItem("sidebarActiveIndex");
+            return savedIndex ? parseInt(savedIndex): 0;
+      });
 
       const activeIndexHandler = (index) => {
-            console.log("index", index);
             setActiveIndex(index); 
+            localStorage.setItem("sidebarActiveIndex", index);
       }
 
     return (
@@ -41,7 +43,7 @@ const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
               opacity:0
         }}   animate={{
                width: isAnimate ? "100%": "0",
-               opacity: isAnimate ? "1": "0",
+               opacity: isAnimate ? 1 : 0,
         }} className="flex w-full bg-black/50 md:hidden right-0 md:bg-white md:w-[250px] fixed top-0 md:top-20 left-0 h-screen z-10 md:-z-10 border-r-1 border-r-[#ccc]">
             {/* Sidebar */}
             <AnimatePresence>
@@ -51,7 +53,7 @@ const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
 
                 }} animate={{
                     x: isAnimate ? "0%" : "-100%",
-                    opacity: isAnimate ? "1" : "0",
+                    opacity: isAnimate ? 1 : 0,
                     transition: {
                        duration: 2,
                        type: "tween",
@@ -88,8 +90,8 @@ const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
               width: 0,
               opacity:0
         }}   animate={{
-               width: isAnimate ? "100": "0",
-               opacity: isAnimate ? "1": "0",
+               width: isAnimate ? "100%": "0",
+               opacity: isAnimate ? 1: 0,
         }} className="hidden  md:flex md:bg-white !w-[250px] fixed top-20 left-0 h-screen bg-red-500 z-10 border-r-1 border-r-[#ccc]">
             {/* Sidebar */}
             <AnimatePresence>
@@ -99,7 +101,7 @@ const Sidebar = ({isAnimate = true, handleIsAnimate}) => {
 
                 }} animate={{
                     x: isAnimate ? "0" : "-100%",
-                    opacity: isAnimate ? "1" : "0",
+                    opacity: isAnimate ? 1 : 0,
                     transition: {
                        duration: 2,
                        type: "tween",

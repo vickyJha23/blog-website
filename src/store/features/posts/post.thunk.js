@@ -67,3 +67,17 @@ export const updatePostImgThunk = createAsyncThunk ("post/imageUpdate", async (p
         return await response.json()
  }) 
 
+export const getUserPostThunk = createAsyncThunk("user/post", async (payload) => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}posts/${payload.userId}`, {
+             method: "GET",
+             headers: {
+                  "Content-Type": "application/json",
+                  "Authorization":  `Bearer ${payload.token}`
+             },
+             credentials: "include"  
+      }); 
+
+      return await response.json();
+})
+
+

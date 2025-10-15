@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createPostThunk, getAllPostsThunk } from "./post.thunk";
+import { createPostThunk, getAllPostsThunk, getUserPostThunk } from "./post.thunk";
 
 
 const postSlice = createSlice({
@@ -22,7 +22,6 @@ const postSlice = createSlice({
          })
          builder.addCase(createPostThunk.rejected,(state, action) => {
                 state.isLoading = false,
-                state.posts = [],
                 state.error = action.payload?.message || action.error.message 
          })
 
@@ -36,10 +35,8 @@ const postSlice = createSlice({
          })
          builder.addCase(getAllPostsThunk.rejected, (state, action) => {
                 state.isLoading = false;
-                state.posts = [];
                 state.error = action.payload?.message || action.error.message;
          })
-
     }
 })
 

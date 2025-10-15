@@ -72,7 +72,6 @@ const userSlice = createSlice({
       })
       builder.addCase(getUserProfileThunk.rejected, (state, action) => {
              state.isLoading = false;
-             state.user = null;
              state.error = action.payload?.message || action.error.message
       })
 

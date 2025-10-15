@@ -28,19 +28,20 @@ const profileNavItems = [
 
 
 const ProfilesLayout = ({ children }) => {
-    const [activeIndex, setActiveIndex] = React.useState(0);
-    const dispatch = useDispatch();
+    const [activeIndex, setActiveIndex] = React.useState(() => {
+           const savedIndex = localStorage.getItem("profileActiveIndex");
+           return savedIndex ? parseInt(savedIndex) : 0; 
+    });
+     const dispatch = useDispatch();  
     const { isLoading, user } = useSelector((state) => state.user);
-    const activeIndexHandler = (index) => {
-        setActiveIndex(index);
-    }
+    const token = localStorage.getItem("accessToken");
+    
+     const activeIndexHandler = (index) => {
+         setActiveIndex(index);
+         localStorage.setItem("profileActiveIndex", index);
+      }
 
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-        if(!token) {
-             return;
-        }
-        const getProfile = async () => {
+     const getProfile = async () => {
             try {
                 const response = await dispatch(getUserProfileThunk(token)).unwrap();
                 toast.success(response.message);
@@ -48,13 +49,17 @@ const ProfilesLayout = ({ children }) => {
                 toast.error(error.message);
             }
         }
-        getProfile();
+
+    useEffect(() => {
+        if(token) {
+              getProfile();
+         }
     }, [])
-
-
+    
+    
     return (
         <Provider store={store}>
-            <>
+              <div>
                {!isLoading ? (<div className='h-screen overflow-hidden'>
                 <section className='h-full ml-62 mt-20'>
                     <div className='flex h-full'>
@@ -95,11 +100,10 @@ const ProfilesLayout = ({ children }) => {
                         </div>
                     </div>
                 </section>
-            </div>) : (<div className='ml-[256px] mt-20 h-[80vh] flex justify-center items-center'>
+              </div>) : (<div className='ml-[256px] mt-20 h-[80vh] flex justify-center items-center'>
                 <ClipLoader color='red' size={100} />
             </div>)}
-                 <ToastContainer />
-            </>
+          </div>  
         </Provider>
     )
 }

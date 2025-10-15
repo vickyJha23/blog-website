@@ -30,10 +30,10 @@ export default function RootLayout({ children }) {
      <html lang="en">
       <body className="antialiased w-full flex flex-col">
         <Provider store={store}>
+          <ToastContainer autoClose={500} />
           <Navigation />
           {children}
-          <ToastContainer />
-          <Footer />
+           <Footer />
         </Provider>
       </body>
     </html>
