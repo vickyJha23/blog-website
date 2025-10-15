@@ -14,12 +14,13 @@ export const createPostThunk = createAsyncThunk("post/create", async (token, dat
          return await response.json()
 })
 
-export const getAllPostsThunk = createAsyncThunk("post/all", async (token) => {
-         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}posts/all-posts`, {
+export const getAllPostsThunk = createAsyncThunk("post/all", async (payload) => {
+          
+         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}posts/all-posts?page=${payload.page}&limit=${payload.limit}&sort=${payload.sort}`, {
                method: "GET",
                headers: {
                    "Content-Type": "application/json",
-                     "Authorization": `Bearer ${token}`
+                    "Authorization": `Bearer ${payload.token}`
                },
                credentials: "include"   
          });

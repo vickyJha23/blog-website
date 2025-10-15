@@ -3,7 +3,7 @@ import { createPostThunk, getAllPostsThunk } from "./post.thunk";
 
 
 const postSlice = createSlice({
-    name: "post",
+    name: "posts",
     initialState: {
          posts: [],
          isLoading: false,

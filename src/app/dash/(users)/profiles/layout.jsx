@@ -98,7 +98,7 @@ const ProfilesLayout = ({ children }) => {
             </div>) : (<div className='ml-[256px] mt-20 h-[80vh] flex justify-center items-center'>
                 <ClipLoader color='red' size={100} />
             </div>)}
-             <ToastContainer />
+                 <ToastContainer />
             </>
         </Provider>
     )

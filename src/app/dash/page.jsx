@@ -1,33 +1,51 @@
 "use client"
-import React from 'react'
-
+import React, {useEffect} from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllPostsThunk } from '@/store/features/posts/post.thunk';
 import Sidebar from '@/components/Sidebar'
 import CommentCard from '@/components/CommentCard';
+import { toast } from 'react-toastify';
+import { ClipLoader } from 'react-spinners';
+
+
 
 
 const DashboardPage = () => {
    const [isAnimate, setIsAnimate] = React.useState(false);
-
+   const {isLoading, error, posts} = useSelector((state) => state.posts);
+  
+   const dispatch = useDispatch();
     const handleIsAnimate = () => {
           setIsAnimate((prev) => !prev);
     }
+
+   useEffect(() => {
+        const fetchPosts = async ()=> {
+             try {
+                const page = 1;
+                const limit = 10;
+                const sort = "asc";
+                const token = localStorage.getItem("accessToken");
+                const response = await dispatch(getAllPostsThunk({page, limit, sort, token})).unwrap();
+             } catch (error) {
+                  toast.error(error.message);
+             }
+        }
+        fetchPosts();
+   }, []);
+   console.log(posts);
+
 
   return (
     <div className='w-full h-screen overflow-hidden'>
         <div className='h-full ml-[256px] mt-20 flex'>
              <div className='flex-1 flex flex-col gap-4 pb-20 min-h-screen scrollbar-thin scrollbar-none overflow-y-auto p-4'>
-                 <CommentCard id={1} />
-                 <CommentCard id={2} />
-                 <CommentCard  id={3} />
-                 <CommentCard id={4} />
-                 <CommentCard id={5} />
-                 <CommentCard />
-                 <CommentCard />
-                 <CommentCard />
-                 <CommentCard />
-                 <CommentCard />
-                 <CommentCard />
-                 <CommentCard />
+                   {isLoading ? (
+                      <ClipLoader size={50} color='red' />
+                   ) : (!error ? (<>
+                             {posts?.posts?.length > 0 && posts.posts.map((post, index) => <CommentCard key={post._id} id={post._id} post={post}  />)}               
+                   </>): (<h1>
+                       {error}</h1>))}
               </div>
              <div className='w-[256px] border-l border-l-[#ccc] h-full overflow-hidden p-4'>
               
