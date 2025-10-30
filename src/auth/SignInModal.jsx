@@ -4,46 +4,61 @@ import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { setModalStatus } from "@/store/features/modal/modal.slice";
-import { useSelector } from "react-redux";
-import { loginUserThunk } from "@/store/features/users/userThunk";
 import { toast } from "react-toastify";
 
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import axiosInstance from "@/utils/axios";
+import { addUserToStore, setModalStatus } from "@/store/features/users/user.slice";
 
 
 const SignInModal = ({handleSignInAndSignUp }) => {
-  const { isLoading, error, user } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
   const router = useRouter();
 
-console.log(user);
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-      try {
-          const response = await dispatch(loginUserThunk(formData)).unwrap();
-           toast.success(response.message);
-           console.log(response);
-           setFormData({
-               email: "",
-               password: ""
-           })
-           setTimeout(() => {
-               dispatch(setModalStatus(false));
-               router.push("/dash");
-           }, 2000)
-      } catch (error) {
-           toast.error(error.message || "login failed");
-      } 
-  };
+     e.preventDefault();
+     mutation.mutate(formData);    
+   };
 
+
+  const mutation = useMutation({
+      mutationFn: async (formData) => {
+           try {
+               console.log("form----");
+              const response = await axiosInstance.post("auth/login", formData);
+              return response.data;
+           } catch (error) {
+                console.log(error);
+              //  throw error;
+           }
+      },
+      onSuccess: (data) => {
+        console.log("Data", data);   
+        if(data && data.accessToken) {
+            localStorage.setItem("accessToken", data.accessToken);
+            dispatch(setModalStatus(!data.status));
+            dispatch(addUserToStore(data.user));
+           toast.success(data.message);
+           setTimeout(() => {
+               router.push("/dash")
+            }, 3000)
+           }
+       },
+
+      onError: (error) => {
+          console.log(error);
+           toast.error(error.message || "Something went wrong while loggin !")
+       }
+
+  })
 
 
 
@@ -71,7 +86,7 @@ console.log(user);
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-gray-600 text-sm mb-1">Email</label>
+          <label className="labelBaseStyle">Email</label>
           <input
             type="email"
             name="email"
@@ -79,12 +94,12 @@ console.log(user);
             onChange={handleChange}
             placeholder="you@example.com"
             required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-amber-400 focus:outline-none text-black"
+            className="inputBaseStyle"
           />
         </div>
 
         <div>
-          <label className="block text-gray-600 text-sm mb-1">Password</label>
+          <label className="labelBaseStyle">Password</label>
           <input
             type="password"
             name="password"
@@ -92,15 +107,17 @@ console.log(user);
             onChange={handleChange}
             placeholder="Enter your password"
             required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-amber-400 focus:outline-none text-black"
+            className="inputBaseStyle"
           />
         </div>
 
-        <button disabled={isLoading}
+        <button disabled={mutation.isPending}
           type="submit"
-          className="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 rounded-lg transition"
+          className="btnSecondary"
+
+
         >
-            { isLoading ? "Sigining": "Sign in"}
+            { mutation.isPending ? "Sigining": "Sign in"}
         </button>
 
         <p className="text-sm text-center select-none text-gray-600 mt-4">

@@ -6,10 +6,22 @@ const postSlice = createSlice({
     name: "posts",
     initialState: {
          posts: [],
+         post: {},
+         userPost: [],
          isLoading: false,
          error: null
     },
-    reducers: {},
+    reducers: {
+        addPostsToStore: (state, action) => {
+              state.posts.push(action.payload);      
+        },
+        addPostToStore: (state, action) => {
+              state.post = action.payload;
+        },
+        addUserPostToStore: (state, action)=> {
+              state.userPost.push(action.payload);
+        }
+    },
     extraReducers: (builder) => {
          
          // create post
@@ -41,5 +53,6 @@ const postSlice = createSlice({
 })
 
 
+export const {addPostToStore, addPostsToStore, addUserPostToStore } = postSlice.actions;
 export default postSlice.reducer;
 

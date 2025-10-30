@@ -27,3 +27,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.btnPrimary {
+     @apply bg-green-500 text-white cursor-pointer transition-all duration-200 ease-in-out hover:bg-green-300 py-2 text-base w-48 capitalize font-semibold tracking-wide rounded-3xl;
+  }
+
+  .inputBaseStyle {
+        @apply w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-amber-400 focus:outline-none text-black
+  }
+  .labelBaseStyle {
+        @apply block text-gray-600 text-sm mb-1;
+  }
+  .btnSecondary {
+        @apply w-full bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 rounded-lg transition;
+  }
+
+

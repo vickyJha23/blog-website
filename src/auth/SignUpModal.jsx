@@ -4,21 +4,17 @@ import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setModalStatus } from "@/store/features/modal/modal.slice";
-import { registerUserThunk } from "@/store/features/users/userThunk";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { addUserToStore, setModalStatus } from "@/store/features/users/user.slice";
+import { isPending } from "@reduxjs/toolkit";
+import axiosInstance from "@/utils/axios";
 
 
 const SignUpModal = ({ handleSignInAndSignUp }) => {
-     const formRef = useRef(null);
-     const {isLoading, user} = useSelector((state) => state.user );
-     const dispatch = useDispatch();
-      
-
-
-     console.log(user);
-
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -30,36 +26,38 @@ const SignUpModal = ({ handleSignInAndSignUp }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-
     if (formData.password !== formData.confirmPassword) {
-        toast.error("password does not match");
-        return;
-      }
-      try {
-           const response = await dispatch(registerUserThunk({
-              userName: formData.name,
-              email: formData.email,
-              password: formData.password,
-              role: "user"
-           })).unwrap();
-            toast.success(response.message);
-            setFormData({
-                name: "",
-                email: "",
-                password: "",
-                confirmPassword: ""
-            })
-            setTimeout(() => {
-               dispatch(setModalStatus(false))
-            }, 2000)
-        
-      } catch (error) {
-           toast.error(error.message || "registration failed")
-      }
+      toast.error("password does not match");
+      return;
+    }
+    mutation.mutate(formData);
   };
-  
+
+
+  const mutation = useMutation({
+    mutationFn: async (formData) => {
+      const response = await axiosInstance.post("auth/register", {
+        userName: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: "user"
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      if (data) {
+        console.log(data);
+        dispatch(addUserToStore(data.user));
+        dispatch(setModalStatus(false))
+        toast.success(data.message);
+      }
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error(error.message)
+    }
+  });
 
   return (
     <section className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
@@ -86,7 +84,7 @@ const SignUpModal = ({ handleSignInAndSignUp }) => {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-gray-600 text-sm mb-1">Full Name</label>
+            <label className="labelBaseStyle">Full Name</label>
             <input
               type="text"
               name="name"
@@ -94,12 +92,12 @@ const SignUpModal = ({ handleSignInAndSignUp }) => {
               onChange={handleChange}
               placeholder="John Doe"
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-amber-400 focus:outline-none text-black"
+              className="inputBaseStyle"
             />
           </div>
 
           <div>
-            <label className="block text-gray-600 text-sm mb-1">Email</label>
+            <label className="labelBaseStyle">Email</label>
             <input
               type="email"
               name="email"
@@ -107,12 +105,12 @@ const SignUpModal = ({ handleSignInAndSignUp }) => {
               onChange={handleChange}
               placeholder="you@example.com"
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-amber-400 focus:outline-none text-black"
+              className="inputBaseStyle"
             />
           </div>
 
           <div>
-            <label className="block text-gray-600 text-sm mb-1">Password</label>
+            <label className="labelBaseStyle">Password</label>
             <input
               type="password"
               name="password"
@@ -120,12 +118,12 @@ const SignUpModal = ({ handleSignInAndSignUp }) => {
               onChange={handleChange}
               placeholder="Enter password"
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-amber-400 focus:outline-none text-black"
+              className="inputBaseStyle"
             />
           </div>
 
           <div>
-            <label className="block text-gray-600 text-sm mb-1">
+            <label className="labelBaseStyle">
               Confirm Password
             </label>
             <input
@@ -135,24 +133,24 @@ const SignUpModal = ({ handleSignInAndSignUp }) => {
               onChange={handleChange}
               placeholder="Re-enter password"
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-amber-400 focus:outline-none text-black"
+              className="inputBaseStyle"
             />
           </div>
 
-          <button disabled={isLoading}
+          <button disabled={mutation.isPending}
             type="submit"
-            className="w-full bg-amber-500 hover:bg-amber-600 text-white font-medium py-2 rounded-lg transition"
+            className="btnSecondary"
           >
-            {isLoading ? "registering..." : "register"};
+            {mutation.isPending ? "Registering..." : "Register"}
           </button>
 
           <p className="text-sm text-center text-gray-600 mt-4">
             Already have an account?{" "}
-            <span disabled={isLoading}
+            <span disabled={mutation.isPending}
               className="text-amber-500 hover:underline cursor-pointer"
               onClick={handleSignInAndSignUp}
             >
-                sign in
+              sign in
             </span>
           </p>
         </form>
