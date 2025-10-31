@@ -11,9 +11,9 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem("accessToken");
 
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+         config.headers.Authorization = `Bearer ${token}`;
     }
-
+    
     return config;
   },
   (error) => {
@@ -32,7 +32,9 @@ axiosInstance.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Handle unauthorized error, e.g., redirect to login
       console.log("Unauthorized! Redirecting to login...");
-      localStorage.removeItem("accessToken");
+      // localStorage.removeItem("accessToken");
+      // localStorage.removeItem("user");
+      localStorage.clear();
       window.location.href = "/";
     }
 

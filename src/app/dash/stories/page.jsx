@@ -3,8 +3,6 @@ import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { getUserPostThunk } from '@/store/features/posts/post.thunk'
-import { getUserProfileThunk } from '@/store/features/users/userThunk'
 
 
 const UserPosts = () => {

@@ -1,8 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllPostsThunk } from '@/store/features/posts/post.thunk';
-import CommentCard from '@/components/CommentCard';
+import PostCard from '@/components/PostCard';
 import { toast } from 'react-toastify';
 import { ClipLoader } from 'react-spinners';
 import { useQuery } from '@tanstack/react-query';
@@ -36,14 +35,14 @@ const DashboardPage = () => {
           {isPending ? (<div className='flex items-center justify-center h-[calc(100vh-80px)]'>
             <ClipLoader size={50} color='red' /> </div>
           ) : (!error ? (<>
-            {posts?.posts?.length > 0 && posts.posts.map((post, index) => <CommentCard key={post._id} id={post._id} post={post} />)}
+            {posts?.posts?.length > 0 && posts.posts.map((post, index) => <PostCard key={post._id} id={post._id} post={post} />)}
           </>) : (<div className='flex items-center justify-center h-[calc(100vh-80px)]'>
                   <h1 className='text-black bg-white shadow-md shadow-amber-100 rounded px-3 py-2'>
             {error.message} </h1> 
           </div>))}
         </div>
         <div className='w-[256px] border-l border-l-[#ccc] h-full overflow-hidden p-4'>
-
+              
         </div>
       </div>
     </div>

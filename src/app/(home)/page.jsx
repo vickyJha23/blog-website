@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 
 const HomePage = () => {
      const {isModalActive} = useSelector((state) => state.user);
+     console.log(isModalActive);
 
 
   return (

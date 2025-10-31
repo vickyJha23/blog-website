@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 
-const CommentCard = ({post, id}) => {
+const PostCard = ({post, id}) => {
   return (
    <Link href={`/dash/posts/${id}`}>
        <div className='w-full h-auto bg-[#fffdd0] rounded text-black'>
@@ -48,4 +48,4 @@ const CommentCard = ({post, id}) => {
   )
 }
 
-export default CommentCard
+export default PostCard

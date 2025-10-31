@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "@/utils/axios";
-import { addUserToStore, setModalStatus } from "@/store/features/users/user.slice";
+import { setUserToStore, setModalStatus } from "@/store/features/users/user.slice";
 
 
 const SignInModal = ({handleSignInAndSignUp }) => {
@@ -32,23 +32,22 @@ const SignInModal = ({handleSignInAndSignUp }) => {
   const mutation = useMutation({
       mutationFn: async (formData) => {
            try {
-               console.log("form----");
               const response = await axiosInstance.post("auth/login", formData);
               return response.data;
            } catch (error) {
-                console.log(error);
-              //  throw error;
+               throw error;
            }
       },
       onSuccess: (data) => {
         console.log("Data", data);   
         if(data && data.accessToken) {
-            localStorage.setItem("accessToken", data.accessToken);
-            dispatch(setModalStatus(!data.status));
-            dispatch(addUserToStore(data.user));
+             localStorage.setItem("accessToken", data.accessToken);
+               localStorage.setItem("user", JSON.stringify(data.user));
+              dispatch(setUserToStore(data.user));
+              dispatch(setModalStatus(!data.status));
            toast.success(data.message);
            setTimeout(() => {
-               router.push("/dash")
+              //  router.push("/dash")
             }, 3000)
            }
        },

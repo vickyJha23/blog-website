@@ -2,44 +2,48 @@
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation';
 import axiosInstance from '@/utils/axios';
+import { useQuery } from '@tanstack/react-query';
+import { ClipLoader } from 'react-spinners';
+
 
 // import {Navigatte}
 
 
 const ProtectedRoute = ({ children }) => {
+     const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
      const router = useRouter();
-      const [loading, setIsLoading] = React.useState(true);
+
      useEffect(() => {
-            const token = localStorage.getItem("accessToken");
-            if(!token) {
-                return router.push("/dash");
-            } 
+          if(!token) {
+               return router.push("/");
+          }
+     }, [])
 
-            const checkAuth = async () => {
-                 try {
-                     const response = await axiosInstance.get("users/profile");
-                      if(response.status === 200) {
-                            setIsLoading(false);
-                      }  
 
-                 } catch (error) {
-                     console.log("Error verifying token:", error);
-                    setIsLoading(false);
-                 }
-            }
-            checkAuth();
+     const {isPending, error, data } = useQuery({
+          queryKey: ["auth"],
+          queryFn: async () => {
+                const response = await axiosInstance.get("users/profile");
+                return response.data;
+          },
+          enabled: Boolean(token),
+          retry: false
+     })
 
-     }, [router]);
-   
-   
-      return (
-          <>
-             {loading ? (<h1>
-                checking auth...
-             </h1>
-             ): (children)}
-        </>
-    )
+     if(isPending) {
+           return <div className="h-screen flex items-center justify-center">
+                <ClipLoader size={48} color='red' />
+           </div>
+     }
+
+     if(error) {
+          return 
+     }
+
+     if(data) {
+          return <> {children }</>
+     }
+
 }
 
 export default ProtectedRoute

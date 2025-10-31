@@ -31,17 +31,10 @@ const ProfilesLayout = ({ children }) => {
             const { data: { user } } = await axiosInstance.get("/users/profile");
             return user;
         },
-        staleTime: 5 * 60 * 1000
+         staleTime: 5 * 60 * 1000
     })
+    
    
-    useEffect(() => {
-        if (user) {
-            dispatch(addUserToStore(user));
-        }
-
-    }, [user, dispatch]);
-
-
     return (
         <ProtectedRoute >
             <Provider store={store}>

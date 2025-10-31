@@ -5,18 +5,22 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { ClipLoader } from 'react-spinners';
 import { addPostToStore } from '@/store/features/posts/post.slice';
+import RenderComments from '@/components/RenderComments';
+import RenderBlog from '@/components/RenderBlog';
+
+
+
 
 const PostDetailsPage = ({params}) => {
       const { id:postId } = React.use(params);
       const dispatch = useDispatch();   
     
-      const {isPending, error, data} =  useQuery({
+      const {isPending, error, data, refetch} =  useQuery({
          queryKey: ["Post"],
          queryFn: async () => {
              const response = await axiosInstance.get(`posts/${postId}`);
              return response.data;
          },
-         staleTime: 10 * 60 * 1000
     })
     
     useEffect(() => {
@@ -27,14 +31,15 @@ const PostDetailsPage = ({params}) => {
   
 
     return (
-    <section className='ml-[245px] mt-20'>
+    <section className='ml-[245px] mt-20 p-5 px-10'>
        {isPending ? <div className='h-[calc(100vh-80px)] w-full flex items-center justify-center'>
                   <ClipLoader color='red' size={48}/>
        </div> : error ? <div className='h-[calc(100vh-80px)] w-full text-black flex items-center justify-center'>
              <h1> {error.message || "Something went wrong while fetching"} </h1>
-       </div> : <div className='min-h-screen'>
-
-           </div>}            
+       </div> : <div className='min-h-screen mt-10 flex flex-col gap-4'>
+                      <RenderBlog />  
+                      <RenderComments id={postId} handleRefetch = {() => refetch} /> 
+                </div>}            
     </section>
   )
 }

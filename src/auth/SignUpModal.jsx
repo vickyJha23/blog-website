@@ -47,8 +47,7 @@ const SignUpModal = ({ handleSignInAndSignUp }) => {
     },
     onSuccess: (data) => {
       if (data) {
-        console.log(data);
-        dispatch(addUserToStore(data.user));
+    
         dispatch(setModalStatus(false))
         toast.success(data.message);
       }
