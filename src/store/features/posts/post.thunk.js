@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+
 export const createPostThunk = createAsyncThunk("post/create", async (token, data) => {
          const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}posts/upload`, {
                 method: "POST",

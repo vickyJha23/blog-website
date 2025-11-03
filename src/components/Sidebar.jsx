@@ -39,14 +39,10 @@ const Sidebar = ({ isAnimate = true, handleIsAnimate }) => {
 
     return (
         <>
-            <motion.div initial={{
-                width: 0,
-                opacity: 0
-            }} animate={{
+            <motion.div animate={{
                 width: isAnimate ? "100%" : "0",
                 opacity: isAnimate ? 1 : 0,
-            }} className="flex w-full bg-black/50 md:hidden right-0 md:bg-white md:w-[250px] fixed top-0 md:top-20 left-0 h-screen z-10 md:-z-10 border-r-1 border-r-[#ccc]">
-                {/* Sidebar */}
+            }} className='fixed top-0'>
                 <AnimatePresence>
                     <motion.div initial={{
                         x: 0,
@@ -86,14 +82,7 @@ const Sidebar = ({ isAnimate = true, handleIsAnimate }) => {
                     </motion.div>
                 </AnimatePresence>
             </motion.div>
-            <motion.div initial={{
-                width: 0,
-                opacity: 0
-            }} animate={{
-                width: isAnimate ? "100%" : "0",
-                opacity: isAnimate ? 1 : 0,
-            }} className="hidden  md:flex md:bg-white !w-[250px] fixed top-20 left-0 h-screen bg-red-500 z-10 border-r-1 border-r-[#ccc]">
-                {/* Sidebar */}
+            <motion.div className="hidden  md:flex md:bg-white !w-[250px] fixed top-20 left-0 h-screen bg-red-500 z-10 border-r-1 border-r-[#ccc]">
                 <AnimatePresence>
                     <motion.div initial={{
                         x: 0,

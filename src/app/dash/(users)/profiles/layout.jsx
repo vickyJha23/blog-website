@@ -28,12 +28,14 @@ const ProfilesLayout = ({ children }) => {
     const { isPending, error, data: user } = useQuery({
         queryKey: ["userProfile"],
         queryFn: async () => {
-            const { data: { user } } = await axiosInstance.get("/users/profile");
+            const response = await axiosInstance.get("/users/profile");
+            console.log(response);
+            const {data: {data: { user }}} = response;
             return user;
         },
          staleTime: 5 * 60 * 1000
     })
-    
+   
    
     return (
         <ProtectedRoute >

@@ -8,20 +8,20 @@ import AddComment from './AddComment';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/utils/axios';
 import { ClipLoader } from 'react-spinners';
+import CommentCard from './CommentCard';
 
 
 const RenderComments = ({id}) => {
-  const blog = useSelector((state) => state.posts.post);
   const user = useSelector((state) => state.user.user);
   
   const {isPending, error, data } = useQuery({
          query: ["comments"],
          queryFn: async () => {
               const response = await axiosInstance.get(`comments/${id}`);
-              return response.data; 
+              return response.data.data;
          }
   })
-
+ 
 
 
   return (
@@ -29,7 +29,7 @@ const RenderComments = ({id}) => {
           <h1 className='font-bold text-2xl text-black'>
                <span>
                   Responses 
-               </span>({formatLikesAndComments(blog.commentCount)})
+               </span>({formatLikesAndComments(data?.commentsData?.totalComments)})
           </h1>
           <div className='user-profile mt-5'>
               <div className='flex items-center gap-3'>
@@ -44,18 +44,15 @@ const RenderComments = ({id}) => {
               </div>
               <AddComment id={id} />    
           </div>
-          <div className=''>
+          <div className='my-5 text-black'>
                 {
                    isPending ? <div className=''>
                      <ClipLoader color='red'  />
                    </div>: error ? <div className='p-3'> <h1 className='text-black text-2xl'>
                       {error.message}
                    </h1> </div> : <div>
-                          {data ?  <div className='comments'>
-
-
-
-                          </div>: <p> No comments for this post</p> }
+                          {data?.commentsData?.comments?.length > 0 ? data?.commentsData?.comments.map((comment, index) => (<CommentCard key={comment._id} comment = {comment} />))  
+                          : <p> No comments for this post</p> }
                    </div>
                 }        
           </div>

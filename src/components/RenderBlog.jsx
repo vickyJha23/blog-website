@@ -12,7 +12,7 @@ import { formatDate, formatLikesAndComments } from '@/utils/util'
 
 const RenderBlog = () => {
     const blog = useSelector((state) => state.posts.post);
-    console.log(blog);
+    console.log("blog-----",  blog);
 
 
     return (

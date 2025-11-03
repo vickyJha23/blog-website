@@ -15,17 +15,19 @@ const PostDetailsPage = ({params}) => {
       const { id:postId } = React.use(params);
       const dispatch = useDispatch();   
     
-      const {isPending, error, data, refetch} =  useQuery({
+      const {isPending, error, data} =  useQuery({
          queryKey: ["Post"],
          queryFn: async () => {
              const response = await axiosInstance.get(`posts/${postId}`);
-             return response.data;
+             const {data: {data: {post}}} = response;
+             return post
          },
     })
+
     
     useEffect(() => {
         if(data) {
-               dispatch(addPostToStore(data.post))
+               dispatch(addPostToStore(data))
            }
     }, [data])
   
@@ -38,7 +40,7 @@ const PostDetailsPage = ({params}) => {
              <h1> {error.message || "Something went wrong while fetching"} </h1>
        </div> : <div className='min-h-screen mt-10 flex flex-col gap-4'>
                       <RenderBlog />  
-                      <RenderComments id={postId} handleRefetch = {() => refetch} /> 
+                      <RenderComments id={postId} /> 
                 </div>}            
     </section>
   )

@@ -38,19 +38,18 @@ const SignInModal = ({handleSignInAndSignUp }) => {
                throw error;
            }
       },
-      onSuccess: (data) => {
-        console.log("Data", data);   
-        if(data && data.accessToken) {
-             localStorage.setItem("accessToken", data.accessToken);
-               localStorage.setItem("user", JSON.stringify(data.user));
-              dispatch(setUserToStore(data.user));
-              dispatch(setModalStatus(!data.status));
-           toast.success(data.message);
+      onSuccess: (data) => {  
+              console.log("data", data); 
+               localStorage.setItem("accessToken", data.data.accessToken);
+               localStorage.setItem("user", JSON.stringify(data.data.user));
+               dispatch(setUserToStore(data.data.user));
+               dispatch(setModalStatus(!data.data.status));
+              toast.success(data.message);
            setTimeout(() => {
-              //  router.push("/dash")
-            }, 3000)
-           }
-       },
+               router.push("/dash")
+            }, 2000)
+         
+          },
 
       onError: (error) => {
           console.log(error);

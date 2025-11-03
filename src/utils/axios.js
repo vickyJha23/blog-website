@@ -30,10 +30,8 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Handle unauthorized error, e.g., redirect to login
-      console.log("Unauthorized! Redirecting to login...");
-      // localStorage.removeItem("accessToken");
-      // localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user");
       localStorage.clear();
       window.location.href = "/";
     }

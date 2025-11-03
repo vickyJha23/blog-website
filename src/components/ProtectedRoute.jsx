@@ -11,33 +11,30 @@ import { ClipLoader } from 'react-spinners';
 
 const ProtectedRoute = ({ children }) => {
      const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+    console.log(token);
      const router = useRouter();
+    
 
-     useEffect(() => {
-          if(!token) {
-               return router.push("/");
-          }
-     }, [])
-
-
-     const {isPending, error, data } = useQuery({
+     const {isLoading, error, data } = useQuery({
           queryKey: ["auth"],
           queryFn: async () => {
                 const response = await axiosInstance.get("users/profile");
                 return response.data;
           },
-          enabled: Boolean(token),
+          enabled: !!token,
           retry: false
-     })
 
-     if(isPending) {
+     })
+     console.log(data, error, isLoading);
+
+     if(isLoading) {
            return <div className="h-screen flex items-center justify-center">
-                <ClipLoader size={48} color='red' />
+                <ClipLoader size={48} color='yellow' />
            </div>
      }
 
-     if(error) {
-          return 
+     if(!token || error) {
+          return router.replace("/")
      }
 
      if(data) {

@@ -8,7 +8,7 @@ import Image from 'next/image';
 const PostCard = ({post, id}) => {
   return (
    <Link href={`/dash/posts/${id}`}>
-       <div className='w-full h-auto bg-[#fffdd0] rounded text-black'>
+       <div className='w-full h-auto bg-gray-50 rounded text-black'>
          <div className='flex flex-col'>
              <div className='flex w-full p-3 px-4 items-center gap-2  border-b-1 border-b-[#ccc]'>
                  <div className='w-10 h-10 rounded-full'>
@@ -34,12 +34,18 @@ const PostCard = ({post, id}) => {
                  </div>
              </div>
              <div className='h-[50px] flex gap-4 border-t border-t-[#ccc] px-4 py-2'>
-                   <button className='cursor-pointer hover:text-red-400'>
+                   <button className='cursor-pointer hover:text-red-400 flex gap-2 items-center'>
                         <MessageCircle color='gray'  />
+                        <span>
+                           {post.commentCount}
+                        </span>
                   </button> 
 
-                  <button className='cursor-pointer'>
+                  <button className='cursor-pointer flex gap-2'>
                        <Heart color='gray' />
+                       <span>
+                          {post.likes} 
+                       </span>
                   </button>
              </div>
          </div> 

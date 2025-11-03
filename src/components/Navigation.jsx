@@ -1,18 +1,21 @@
 "use client";
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, Search, NotebookPen } from 'lucide-react';
 import Image from 'next/image';
 import avatar from "../../public/images/avatar.png"
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { setModalStatus } from '@/store/features/users/user.slice';
+import { LogoutDropdown } from './LogoutDropdown';
+import { setLogoutButtonStatus } from '@/store/features/users/user.slice';
 
 const Navigation = () => {
      const router = useRouter();
      const dispatch = useDispatch()
      const pathName = usePathname();
+     const isLogoutButtonActive = useSelector((state) => state.user.isLogoutButtonActive);
 
      const handleNavigation = (eventTriggeredBy = "") => {
           const token = localStorage.getItem("accessToken");
@@ -25,7 +28,7 @@ const Navigation = () => {
 
 
      if (pathName === "/") {
-          return (<nav className='fixed  top-0 left-0 z-20 w-full h-20 border-b-2 border-b-black flex justify-between items-center px-6 overflow-hidden'>
+          return (<nav className='fixed  top-0 left-0 z-20 w-full h-20 border-b-2 border-b-black flex justify-between items-center px-6'>
                <div className='text-center'>
                     <h2 className='font-bold text-3xl text-black'>
                          Medium
@@ -57,7 +60,7 @@ const Navigation = () => {
 
 
      return (
-          <nav className='fixed  top-0 left-0 bg-white z-50 w-full h-20 border-b-1 border-b-[#ccc] flex justify-between items-center px-6 overflow-hidden'>
+          <nav className='fixed  top-0 left-0 bg-white z-30 w-full h-20 border-b-1 border-b-[#ccc] flex justify-between items-center px-6'>
                <div className='flex gap-2 items-center'>
                     <button>
                          <Menu size={22} color='black' />
@@ -89,9 +92,11 @@ const Navigation = () => {
                          </Link>
                     </div>
                     <div className='bg-black w-[40px] h-[40px] rounded-full overflow-hidden'>
-
-                         <Image width={0} height={0} sizes='100vw' className='w-full h-full object-cover rounded-full' src={avatar} alt="" />
-                    </div>
+                         <Image onClick={() => {
+                           dispatch(setLogoutButtonStatus())
+                    }} width={0} height={0} sizes='100vw' className='w-full h-full object-cover rounded-full' src={avatar} alt="" />
+                         {isLogoutButtonActive && <LogoutDropdown  />}
+                      </div>
                </div>
 
 
