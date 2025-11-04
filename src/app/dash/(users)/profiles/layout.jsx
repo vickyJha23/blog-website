@@ -10,21 +10,34 @@ import { useQuery } from '@tanstack/react-query'
 import axiosInstance from '@/utils/axios.js'
 import { addUserToStore } from '@/store/features/users/user.slice'
 import ProtectedRoute from '@/components/ProtectedRoute'
+import { usePathname } from 'next/navigation'
 
 const ProfilesLayout = ({ children }) => {
     const dispatch = useDispatch();
-    const [activeIndex, setActiveIndex] = React.useState(() => {
-        const savedIndex = localStorage.getItem("profileActiveIndex");
-        return savedIndex ? parseInt(savedIndex) : 0;
-    });
+    const [activeProfileIndex, setActiveProfileIndex] = useState(() => {
+           const savedIndex = localStorage.getItem("activeProfileIndex");
+           return savedIndex ? parseInt(savedIndex)  : 0; 
+    })
+    
+    let pathName = usePathname();
 
-    const activeIndexHandler = (index, key) => {
-        if (index) {
-            setActiveIndex(index);
-            localStorage.setItem("profileActiveIndex", index);
+    useEffect(() => {
+        if(pathName) {
+             const foundIndex = profileNavItems.findIndex((navItem) => navItem.href === pathName);
+             if(foundIndex !== -1) {
+                  setActiveProfileIndex(foundIndex);
+                  localStorage.setItem("activeProfileIndex", foundIndex);
+             }
         }
-    }
+    }, [pathName])
+   
 
+
+    const activeProfileIndexHandler = (index) => {
+            setActiveProfileIndex(index);
+            localStorage.setItem("activeProfileIndex", index);
+     }
+  
     const { isPending, error, data: user } = useQuery({
         queryKey: ["userProfile"],
         queryFn: async () => {
@@ -47,9 +60,9 @@ const ProfilesLayout = ({ children }) => {
                         <h1 className='text-black font-bold bg-white shadow-md shadow-amber-100 px-3 py-2'>
                         {error.message || "error fetching profile data"}
                     </h1>
-                    </div>) : (<div className='h-screen overflow-hidden'>
-                        <section className='h-full ml-62 mt-20'>
-                            <div className='flex h-full'>
+                    </div>) : (<div className='h-screen md:overflow-hidden'>
+                        <section className='h-full md:ml-62 mt-20'>
+                            <div className='flex flex-col md:flex-row h-full'>
                                 <div className='w-full h-full flex-1 p-8 pt-16 overflow-auto'>
                                     <div className='flex justify-between'>
                                         <h1 className='text-4xl font-bold text-black'>
@@ -62,7 +75,7 @@ const ProfilesLayout = ({ children }) => {
                                     <div className='mt-4'>
                                         <ul className='flex gap-4 text-black border-b-1 border-b-[#ccc] py-2'>
                                             {profileNavItems.map((profileNavItem, index) => (<li key={index}>
-                                                <Link onClick={() => activeIndexHandler(index)} key={name} className={`py-3 ${activeIndex === index ? "border-b-1 border-b-black" : ""}`} href={profileNavItem.href}>
+                                                <Link onClick={() => activeProfileIndexHandler(index)} key={name} className={`py-3 ${activeProfileIndex === index ? "border-b-1 border-b-black" : ""}`} href={profileNavItem.href}>
                                                     {profileNavItem.name}
                                                 </Link>
                                             </li>))}
@@ -72,7 +85,7 @@ const ProfilesLayout = ({ children }) => {
                                         {children}
                                     </div>
                                 </div>
-                                <div className='w-64 border-l-1 border-l-[#ccc] overflow-hidden'>
+                                <div className='w-64 hidden md:block border-l-1 border-l-[#ccc] overflow-hidden'>
                                     <div className='p-4'>
                                         <div className='w-20 h-20 bg-red-500 rounded-2xl overflow-hidden'>
                                             <img src="https://plus.unsplash.com/premium_photo-1682096252599-e8536cd97d2b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870" alt="" className='w-full h-full object-cover' />

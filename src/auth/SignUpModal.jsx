@@ -2,14 +2,11 @@
 
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
-import { useRef, useState } from "react";
+import {useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { addUserToStore, setModalStatus } from "@/store/features/users/user.slice";
-import { isPending } from "@reduxjs/toolkit";
+import { setModalStatus } from "@/store/features/users/user.slice.js";
 import axiosInstance from "@/utils/axios";
 
 
